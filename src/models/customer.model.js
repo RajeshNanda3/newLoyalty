@@ -22,7 +22,7 @@ const customerSchema = new Schema(
     reffererid: {
       type: Schema.Types.ObjectId,
       ref: "Seller",
-      defalt: "",
+      default: "671e2bce420a0400c9971a26",
     },
   },
   { timestamps: true }

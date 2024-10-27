@@ -5,6 +5,6 @@ import { verifySellerJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 // Secured routes
-router.route("/").post(verifySellerJWT, handleTransaction);
+router.route("/add").post(verifySellerJWT, handleTransaction);
 
 export default router;
