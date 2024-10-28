@@ -194,7 +194,9 @@ export const handleTransaction = asyncHandler(async (req, res) => {
       throw new ApiError(404, "Customer not found");
     }
 
-   
+// Calculate points for customer and referrer
+const customerPoints = balancePoint * 0.9;
+const referralPoints = balancePoint * 0.1;
 
     // Step 3: Update seller's balance by decrementing points
     const sellerUpdate = await Seller.updateOne(
@@ -210,17 +212,38 @@ export const handleTransaction = asyncHandler(async (req, res) => {
     // Step 4: Update customer's balance by incrementing points
     const customerUpdate = await Customer.updateOne(
       { mobile },
-      { $inc: { totalbalancepoint: balancePoint } },
+      { $inc: { totalbalancepoint: customerPoints } },
       { session }
     );
 
     if (customerUpdate.modifiedCount !== 1) {
       throw new ApiError(500, "Failed to update customer balance");
     }
+
+    // Add referral points if a referrer is specified in the customer record
+console.log(receiver.referrerid)
+    if (receiver.referrerid) {
+      console.log("Adding referral points to referrer:", referralPoints);
+      const referrerUpdate = await Seller.updateOne(
+        {_id : receiver.referrerid},
+        { $inc: { totalbalancepoint: referralPoints } },
+        { session }
+      );
+
+      if (!referrerUpdate) {
+        console.error("Failed to update referrer balance");
+        throw new ApiError(500, "Failed to update referrer balance");
+      }
+    }
+
+
 const transaction = await Transaction.create({
   senderid : sellerId,
   receiverid : receiver._id,
-  point : balancePoint
+  referrerid :receiver.referrerid,
+  point : balancePoint,
+  loyalty : customerPoints,
+  referral : referralPoints
 })
     
     // Commit the transaction

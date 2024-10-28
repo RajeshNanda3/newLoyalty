@@ -9,7 +9,13 @@ const transactionSchema = new Schema(
       type : Schema.Types.ObjectId,
       ref : "Customer"
     },
-    point :{type :Number, require :true}
+    referrerid: {
+      type : Schema.Types.ObjectId,
+      ref : "Customer"
+    },
+    point :{type :Number, require :true},
+    loyalty : {type : Number},
+    referral :{type : Number}
 
     
 

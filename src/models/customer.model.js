@@ -19,7 +19,7 @@ const customerSchema = new Schema(
     fullname: { type: String, require: true, lowercase: true, trim: true },
     avatar: { type: String },
     totalbalancepoint: { type: Number, default: 10 },
-    reffererid: {
+    referrerid: {
       type: Schema.Types.ObjectId,
       ref: "Seller",
       default: "671e2bce420a0400c9971a26",
